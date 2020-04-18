@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <meta charset="utf-8" />
+        <title>Kinda Cool Website</title>
+        <link rel="stylesheet" href="/theme/css/main.css" />
+        <link href="/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Kinda Cool Website Atom Feed" />
+</head>
+
+<body id="index" class="home">
+        <header id="banner" class="body">
+                <h1><a href="/">Kinda Cool Website</a></h1>
+                <nav><ul>
+                    <li><a href="/pages/about.html">About</a></li>
+                    <li><a href="/category/misc.html">misc</a></li>
+                </ul></nav>
+        </header><!-- /#banner -->
+
+            <aside id="featured" class="body">
+                <article>
+                    <h1 class="entry-title"><a href="/warrens-first-post.html">Warren's First Post</a></h1>
+<footer class="post-info">
+        <abbr class="published" title="2020-04-10T00:00:00-04:00">
+                Published: Fri 10 April 2020
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="/author/warren.html">Warren</a>
+        </address>
+<p>In <a href="/category/misc.html">misc</a>.</p>
+
+</footer><!-- /.post-info --><h1>Map</h1>
+<h2 style="text-align: center">Maps<h2>
+<div id="container" style="height: 100%; width: 100%; margin: 0 auto; text-align:center; line-height: 520px">
+  Downloading map...
+</div>
+  <br />
+<div id="container2" style="height: 100%; width: 100%; margin: 0 auto; text-align:center; line-height: 520px">
+  Downloading pie chart...
+</div>
+
+<script src="https://code.highcharts.com/maps/highmaps.js"></script>
+<script src="https://code.highcharts.com/maps/modules/data.js"></script>
+<script src="https://code.highcharts.com/maps/modules/data.js"></script>
+<script src="https://code.highcharts.com/maps/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/maps/modules/offline-exporting.js"></script>
+<script src="https://code.highcharts.com/mapdata/countries/us/us-nj-all.js"></script>
+
+<script>
+Highcharts.getJSON(
+  'https://services1.arcgis.com/0MSEUqKaxRlEPj5g/arcgis/rest/services/COVID19_Counties_View/FeatureServer/0/query?where=state_fips%3D34&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&resultType=none&distance=0.0&units=esriSRUnit_Meter&returnGeodetic=false&outFields=confirmed%2C+confirmed_per_100k%2C+fips%2C+county&returnGeometry=false&returnCentroid=false&featureEncoding=esriDefault&multipatchOption=xyFootprint&maxAllowableOffset=&geometryPrecision=&outSR=&datumTransformation=&applyVCSProjection=false&returnIdsOnly=false&returnUniqueIdsOnly=false&returnCountOnly=false&returnExtentOnly=false&returnQueryGeometry=false&returnDistinctValues=false&cacheHint=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&having=&resultOffset=&resultRecordCount=&returnZ=false&returnM=false&returnExceededLimitFeatures=true&quantizationParameters=&sqlFormat=none&f=pjson&token=',
+  function (data) {
+    data = data.features;
+    data.forEach(function(e) {
+      e.value = e.attributes.confirmed_per_100k;
+      e.code = e.attributes.fips;
+      e.y = e.attributes.confirmed;
+            e.name = e.attributes.county;
+    });
+
+ Highcharts.chart('container2', {
+    chart: {
+        plotBackgroundColor: null,
+        plotBorderWidth: null,
+        plotShadow: false,
+        type: 'pie'
+    },
+    title: {
+        text: 'NJ Corona Virus Confirmed Cases'
+    },
+    tooltip: {
+        pointFormat: '{series.name}: <b>{point.y:.0f}</b>'
+    },
+    accessibility: {
+        point: {
+            valueSuffix: '%'
+        }
+    },
+    plotOptions: {
+        pie: {
+            allowPointSelect: true,
+            cursor: 'pointer',
+            dataLabels: {
+                enabled: true,
+                format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+            }
+        }
+    },
+    series: [{
+        name: 'Confirmed',
+        colorByPoint: true,
+        data: data
+    }]
+});
+    /**
+     * Data parsed from http://www.bls.gov/lau/#tables
+     *
+     * 1. Go to http://www.bls.gov/lau/laucntycur14.txt (or similar, updated
+     *  datasets)
+     * 2. In the Chrome Developer tools console, run this code:
+     *  copy(JSON.stringify(document.body.innerHTML.split('\n').filter(function (s) { return s.indexOf('<PUT DATE HERE IN FORMAT e.g. Feb-14>') !== -1; }).map(function (row) { row = row.split('|'); return { code: 'us-' + row[3].trim().slice(-2).toLowerCase() + '-' + row[2].trim(), name: row[3].trim(), value: parseFloat(row[8]) }; })))
+     * 3. The data is now on your clipboard, paste it below
+     * 4. Verify that the length of the data is reasonable, about 3300
+     *  counties.
+     */
+
+    var countiesMap = Highcharts.geojson(
+        Highcharts.maps['countries/us/us-nj-all']
+      ),
+      // Extract the line paths from the GeoJSON
+      lines = Highcharts.geojson(
+        Highcharts.maps['countries/us/us-nj-all'], 'mapline'
+      ),
+      // Filter out the state borders and separator lines, we want these
+      // in separate series
+      borderLines = Highcharts.grep(lines, function (l) {
+        return l.properties['hc-group'] === '__border_lines__';
+      }),
+      separatorLines = Highcharts.grep(lines, function (l) {
+        return l.properties['hc-group'] === '__separator_lines__';
+      });
+
+    document.getElementById('container').innerHTML = 'Rendering map...';
+
+    // Create the map
+    setTimeout(function () { // Otherwise innerHTML doesn't update
+      Highcharts.mapChart('container', {
+        chart: {
+          borderWidth: 1,
+          marginRight: 20 // for the legend
+        },
+
+        title: {
+          text: 'NJ Coronavirus Rate (Confirmed Cases/100K)'
+        },
+
+        legend: {
+          layout: 'vertical',
+          align: 'right',
+          floating: true,
+          backgroundColor: ( // theme
+            Highcharts.defaultOptions &&
+            Highcharts.defaultOptions.legend &&
+            Highcharts.defaultOptions.legend.backgroundColor
+          ) || 'rgba(255, 255, 255, 0.85)'
+        },
+
+        mapNavigation: {
+          enabled: true
+        },
+
+        colorAxis: {
+          min: 0,
+          max: 600,
+          tickInterval: 100,
+          stops: [[0, '#F1EEF6'], [0.1, '#900037'], [1, '#500007']],
+        },
+
+        plotOptions: {
+          mapline: {
+            showInLegend: false,
+            enableMouseTracking: false
+          }
+        },
+
+        series: [{
+          mapData: countiesMap,
+          data: data,
+          joinBy: ['fips', 'code'],
+          name: 'COVID-19 Rate',
+          tooltip: {
+            valueSuffix: ''
+          },
+          borderWidth: 0.5,
+          states: {
+            hover: {
+              color: '#a4edba'
+            }
+          },
+          shadow: false
+        }, {
+          type: 'mapline',
+          name: 'State borders',
+          data: borderLines,
+          color: 'white',
+          shadow: false
+        }, {
+          type: 'mapline',
+          name: 'Separator',
+          data: separatorLines,
+          color: 'gray',
+          shadow: false
+        }]
+      });
+    }, 0);
+  }
+);
+</script>                </article>
+            </aside><!-- /#featured -->
+        <section id="extras" class="body">
+                <div class="blogroll">
+                        <h2>links</h2>
+                        <ul>
+                            <li><a href="http://getpelican.com/">Pelican</a></li>
+                            <li><a href="http://python.org/">Python.org</a></li>
+                            <li><a href="http://jinja.pocoo.org/">Jinja2</a></li>
+                            <li><a href="#">You can modify those links in your config file</a></li>
+                        </ul>
+                </div><!-- /.blogroll -->
+                <div class="social">
+                        <h2>social</h2>
+                        <ul>
+                            <li><a href="/feeds/all.atom.xml" type="application/atom+xml" rel="alternate">atom feed</a></li>
+
+                            <li><a href="#">You can add links in your config file</a></li>
+                            <li><a href="#">Another social link</a></li>
+                        </ul>
+                </div><!-- /.social -->
+        </section><!-- /#extras -->
+
+        <footer id="contentinfo" class="body">
+                <address id="about" class="vcard body">
+                Proudly powered by <a href="http://getpelican.com/">Pelican</a>, which takes great advantage of <a href="http://python.org">Python</a>.
+                </address><!-- /#about -->
+
+                <p>The theme is by <a href="http://coding.smashingmagazine.com/2009/08/04/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+        </footer><!-- /#contentinfo -->
+
+</body>
+</html>

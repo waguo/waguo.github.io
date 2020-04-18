@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Kinda Cool Website - misc</title><link href="/" rel="alternate"></link><link href="/feeds/misc.atom.xml" rel="self"></link><id>/</id><updated>2020-04-10T00:00:00-04:00</updated><entry><title>Warren's First Post</title><link href="/warrens-first-post.html" rel="alternate"></link><published>2020-04-10T00:00:00-04:00</published><updated>2020-04-10T00:00:00-04:00</updated><author><name>Warren</name></author><id>tag:None,2020-04-10:/warrens-first-post.html</id><summary type="html">&lt;h1&gt;Map&lt;/h1&gt;
+&lt;h2 style="text-align: center"&gt;Maps&lt;h2&gt;
+&lt;div id="container" style="height: 100%; width: 100%; margin: 0 auto; text-align:center; line-height: 520px"&gt;
+  Downloading map...
+&lt;/div&gt;
+  &lt;br /&gt;
+&lt;div id="container2" style="height: 100%; width: 100%; margin: 0 auto; text-align:center; line-height: 520px"&gt;
+  Downloading pie chart...
+&lt;/div&gt;
+
+&lt;script src="https://code.highcharts.com/maps/highmaps.js"&gt;&lt;/script&gt;
+&lt;script src="https://code.highcharts.com/maps/modules/data.js"&gt;&lt;/script&gt;
+&lt;script src="https://code.highcharts.com/maps/modules/data.js"&gt;&lt;/script&gt;
+&lt;script src="https://code.highcharts.com/maps/modules/exporting.js"&gt;&lt;/script&gt;
+&lt;script src="https://code.highcharts.com/maps/modules/offline-exporting.js"&gt;&lt;/script&gt;
+&lt;script src="https://code.highcharts.com/mapdata/countries/us/us-nj-all.js"&gt;&lt;/script&gt;
+
+&lt;script&gt;
+Highcharts.getJSON(
+  'https://services1.arcgis.com/0MSEUqKaxRlEPj5g/arcgis/rest/services/COVID19_Counties_View/FeatureServer/0/query?where=state_fips%3D34&amp;objectIds=&amp;time=&amp;geometry=&amp;geometryType=esriGeometryEnvelope&amp;inSR=&amp;spatialRel=esriSpatialRelIntersects&amp;resultType=none&amp;distance=0.0&amp;units=esriSRUnit_Meter&amp;returnGeodetic=false&amp;outFields=confirmed%2C+confirmed_per_100k%2C+fips%2C+county&amp;returnGeometry …&lt;/script&gt;&lt;/h2&gt;&lt;/h2&gt;</summary><content type="html">&lt;h1&gt;Map&lt;/h1&gt;
+&lt;h2 style="text-align: center"&gt;Maps&lt;h2&gt;
+&lt;div id="container" style="height: 100%; width: 100%; margin: 0 auto; text-align:center; line-height: 520px"&gt;
+  Downloading map...
+&lt;/div&gt;
+  &lt;br /&gt;
+&lt;div id="container2" style="height: 100%; width: 100%; margin: 0 auto; text-align:center; line-height: 520px"&gt;
+  Downloading pie chart...
+&lt;/div&gt;
+
+&lt;script src="https://code.highcharts.com/maps/highmaps.js"&gt;&lt;/script&gt;
+&lt;script src="https://code.highcharts.com/maps/modules/data.js"&gt;&lt;/script&gt;
+&lt;script src="https://code.highcharts.com/maps/modules/data.js"&gt;&lt;/script&gt;
+&lt;script src="https://code.highcharts.com/maps/modules/exporting.js"&gt;&lt;/script&gt;
+&lt;script src="https://code.highcharts.com/maps/modules/offline-exporting.js"&gt;&lt;/script&gt;
+&lt;script src="https://code.highcharts.com/mapdata/countries/us/us-nj-all.js"&gt;&lt;/script&gt;
+
+&lt;script&gt;
+Highcharts.getJSON(
+  'https://services1.arcgis.com/0MSEUqKaxRlEPj5g/arcgis/rest/services/COVID19_Counties_View/FeatureServer/0/query?where=state_fips%3D34&amp;objectIds=&amp;time=&amp;geometry=&amp;geometryType=esriGeometryEnvelope&amp;inSR=&amp;spatialRel=esriSpatialRelIntersects&amp;resultType=none&amp;distance=0.0&amp;units=esriSRUnit_Meter&amp;returnGeodetic=false&amp;outFields=confirmed%2C+confirmed_per_100k%2C+fips%2C+county&amp;returnGeometry=false&amp;returnCentroid=false&amp;featureEncoding=esriDefault&amp;multipatchOption=xyFootprint&amp;maxAllowableOffset=&amp;geometryPrecision=&amp;outSR=&amp;datumTransformation=&amp;applyVCSProjection=false&amp;returnIdsOnly=false&amp;returnUniqueIdsOnly=false&amp;returnCountOnly=false&amp;returnExtentOnly=false&amp;returnQueryGeometry=false&amp;returnDistinctValues=false&amp;cacheHint=false&amp;orderByFields=&amp;groupByFieldsForStatistics=&amp;outStatistics=&amp;having=&amp;resultOffset=&amp;resultRecordCount=&amp;returnZ=false&amp;returnM=false&amp;returnExceededLimitFeatures=true&amp;quantizationParameters=&amp;sqlFormat=none&amp;f=pjson&amp;token=',
+  function (data) {
+    data = data.features;
+    data.forEach(function(e) {
+      e.value = e.attributes.confirmed_per_100k;
+      e.code = e.attributes.fips;
+      e.y = e.attributes.confirmed;
+            e.name = e.attributes.county;
+    });
+
+ Highcharts.chart('container2', {
+    chart: {
+        plotBackgroundColor: null,
+        plotBorderWidth: null,
+        plotShadow: false,
+        type: 'pie'
+    },
+    title: {
+        text: 'NJ Corona Virus Confirmed Cases'
+    },
+    tooltip: {
+        pointFormat: '{series.name}: &lt;b&gt;{point.y:.0f}&lt;/b&gt;'
+    },
+    accessibility: {
+        point: {
+            valueSuffix: '%'
+        }
+    },
+    plotOptions: {
+        pie: {
+            allowPointSelect: true,
+            cursor: 'pointer',
+            dataLabels: {
+                enabled: true,
+                format: '&lt;b&gt;{point.name}&lt;/b&gt;: {point.percentage:.1f} %'
+            }
+        }
+    },
+    series: [{
+        name: 'Confirmed',
+        colorByPoint: true,
+        data: data
+    }]
+});
+    /**
+     * Data parsed from http://www.bls.gov/lau/#tables
+     *
+     * 1. Go to http://www.bls.gov/lau/laucntycur14.txt (or similar, updated
+     *  datasets)
+     * 2. In the Chrome Developer tools console, run this code:
+     *  copy(JSON.stringify(document.body.innerHTML.split('\n').filter(function (s) { return s.indexOf('&lt;PUT DATE HERE IN FORMAT e.g. Feb-14&gt;') !== -1; }).map(function (row) { row = row.split('|'); return { code: 'us-' + row[3].trim().slice(-2).toLowerCase() + '-' + row[2].trim(), name: row[3].trim(), value: parseFloat(row[8]) }; })))
+     * 3. The data is now on your clipboard, paste it below
+     * 4. Verify that the length of the data is reasonable, about 3300
+     *  counties.
+     */
+
+    var countiesMap = Highcharts.geojson(
+        Highcharts.maps['countries/us/us-nj-all']
+      ),
+      // Extract the line paths from the GeoJSON
+      lines = Highcharts.geojson(
+        Highcharts.maps['countries/us/us-nj-all'], 'mapline'
+      ),
+      // Filter out the state borders and separator lines, we want these
+      // in separate series
+      borderLines = Highcharts.grep(lines, function (l) {
+        return l.properties['hc-group'] === '__border_lines__';
+      }),
+      separatorLines = Highcharts.grep(lines, function (l) {
+        return l.properties['hc-group'] === '__separator_lines__';
+      });
+
+    document.getElementById('container').innerHTML = 'Rendering map...';
+
+    // Create the map
+    setTimeout(function () { // Otherwise innerHTML doesn't update
+      Highcharts.mapChart('container', {
+        chart: {
+          borderWidth: 1,
+          marginRight: 20 // for the legend
+        },
+
+        title: {
+          text: 'NJ Coronavirus Rate (Confirmed Cases/100K)'
+        },
+
+        legend: {
+          layout: 'vertical',
+          align: 'right',
+          floating: true,
+          backgroundColor: ( // theme
+            Highcharts.defaultOptions &amp;&amp;
+            Highcharts.defaultOptions.legend &amp;&amp;
+            Highcharts.defaultOptions.legend.backgroundColor
+          ) || 'rgba(255, 255, 255, 0.85)'
+        },
+
+        mapNavigation: {
+          enabled: true
+        },
+
+        colorAxis: {
+          min: 0,
+          max: 600,
+          tickInterval: 100,
+          stops: [[0, '#F1EEF6'], [0.1, '#900037'], [1, '#500007']],
+        },
+
+        plotOptions: {
+          mapline: {
+            showInLegend: false,
+            enableMouseTracking: false
+          }
+        },
+
+        series: [{
+          mapData: countiesMap,
+          data: data,
+          joinBy: ['fips', 'code'],
+          name: 'COVID-19 Rate',
+          tooltip: {
+            valueSuffix: ''
+          },
+          borderWidth: 0.5,
+          states: {
+            hover: {
+              color: '#a4edba'
+            }
+          },
+          shadow: false
+        }, {
+          type: 'mapline',
+          name: 'State borders',
+          data: borderLines,
+          color: 'white',
+          shadow: false
+        }, {
+          type: 'mapline',
+          name: 'Separator',
+          data: separatorLines,
+          color: 'gray',
+          shadow: false
+        }]
+      });
+    }, 0);
+  }
+);
+&lt;/script&gt;</content><category term="misc"></category></entry></feed>
